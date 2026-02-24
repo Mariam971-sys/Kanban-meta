@@ -1,4 +1,5 @@
-<html lang="en">
+<!DOCTYPE html>
+<html lang="sv">
 <head>
   <meta charset="UTF-8">
   <title>Kanban Meta</title>
@@ -10,27 +11,27 @@
 
 <div class="board">
   <div class="column" id="todo">
-    <h2>Todo</h2>
+    <h2>Att göra</h2>
     <div class="cards"></div>
-    <button onclick="addCard('todo')">Add Card</button>
+    <button onclick="laggTillKort('todo')">Lägg till kort</button>
   </div>
 
   <div class="column" id="inprogress">
-    <h2>In Progress</h2>
+    <h2>Pågående</h2>
     <div class="cards"></div>
-    <button onclick="addCard('inprogress')">Add Card</button>
+    <button onclick="laggTillKort('inprogress')">Lägg till kort</button>
   </div>
 
   <div class="column" id="inreview">
-    <h2>In Review</h2>
+    <h2>Under granskning</h2>
     <div class="cards"></div>
-    <button onclick="addCard('inreview')">Add Card</button>
+    <button onclick="laggTillKort('inreview')">Lägg till kort</button>
   </div>
 
   <div class="column" id="done">
-    <h2>Done</h2>
+    <h2>Klart</h2>
     <div class="cards"></div>
-    <button onclick="addCard('done')">Add Card</button>
+    <button onclick="laggTillKort('done')">Lägg till kort</button>
   </div>
 </div>
 

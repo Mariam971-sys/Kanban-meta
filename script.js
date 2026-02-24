@@ -1,66 +1,80 @@
-//Save Data
+// Spara data
 let cards = JSON.parse(localStorage.getItem("cards")) || [];
 
-//add card
+// Lägg till kort
+function laggTillKort(status) {
+  const titel = prompt("Korttitel:");
+  const beskrivning = prompt("Kortbeskrivning:");
 
-function addCard(status) {
-  const title = prompt("Card title:");
-  const description = prompt("Card description:");
+  if (!titel) return;
 
-  if (!title) return;
-
-  const card = {
+  const kort = {
     id: Date.now(),
-    title,
-    description,
+    titel,
+    beskrivning,
     status
   };
 
-  cards.push(card);
-  saveAndRender();
+  cards.push(kort);
+  sparaOchRendera();
 }
-//Save + Render
 
-function saveAndRender() {
+// Ta bort kort
+function taBortKort(id) {
+  cards = cards.filter(kort => kort.id != id);
+  sparaOchRendera();
+}
+
+// Spara + Rendera
+function sparaOchRendera() {
   localStorage.setItem("cards", JSON.stringify(cards));
-  render();
+  rendera();
 }
-// Render Cards
 
-function render() {
+// Lägg till drag & drop-funktion
+function laggTillDrag(div, kort) {
+  div.addEventListener("dragstart", () => {
+    div.classList.add("dragging");
+    div.dataset.id = kort.id;
+  });
+
+  div.addEventListener("dragend", () => {
+    div.classList.remove("dragging");
+  });
+}
+
+// Rendera kort
+function rendera() {
   document.querySelectorAll(".cards").forEach(c => c.innerHTML = "");
 
-  cards.forEach(card => {
+  cards.forEach(kort => {
     const div = document.createElement("div");
     div.className = "card";
     div.draggable = true;
     div.innerHTML = `
-      <strong>${card.title}</strong>
-      <p>${card.description}</p>
-      <button onclick="deleteCard(${card.id})">Delete</button>
+      <strong>${kort.titel}</strong>
+      <p>${kort.beskrivning}</p>
+      <button onclick="taBortKort(${kort.id})">Ta bort</button>
     `;
 
-    div.addEventListener("dragstart", () => {
-      div.classList.add("dragging");
-      div.dataset.id = card.id;
-    });
-
-    document.querySelector(`#${card.status} .cards`).appendChild(div);
+    laggTillDrag(div, kort); // lägg till dragfunktion
+    document.querySelector(`#${kort.status} .cards`).appendChild(div);
   });
 }
-// Delete Card
+
+// Ställ in kolumner för drag & drop
 document.querySelectorAll(".cards").forEach(column => {
-  column.addEventListener("dragover", e => {
-    e.preventDefault();
-  });
+  column.addEventListener("dragover", e => e.preventDefault());
 
   column.addEventListener("drop", e => {
-    const id = document.querySelector(".dragging").dataset.id;
-    const card = cards.find(c => c.id == id);
-    card.status = column.parentElement.id;
-    saveAndRender();
+    const dragging = document.querySelector(".dragging");
+    if (!dragging) return;
+    const id = dragging.dataset.id;
+    const kort = cards.find(k => k.id == id);
+    kort.status = column.parentElement.id;
+    sparaOchRendera();
   });
 });
 
-// Run  Page Load
-render();
+// Kör vid sidan laddning
+rendera();
